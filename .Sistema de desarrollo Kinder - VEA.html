@@ -1,0 +1,486 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;min-height:100vh;background:#DDCFBB;}
+body{display:flex;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;}
+.wrap{padding:2rem 1.25rem;width:100%;max-width:900px;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;padding-bottom:1.25rem;border-bottom:0.5px solid #c9b99a;}
+.vea-title{font-size:22px;font-weight:800;color:#1A1108;letter-spacing:-0.4px;font-family:'Georgia','Times New Roman',serif;}
+.actio{font-size:11px;color:#7a6a55;text-align:right;line-height:1.6;}
+.actio strong{display:block;font-size:13px;font-weight:700;color:#1A1108;letter-spacing:-0.2px;}
+.ciclo-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#D97757;margin-bottom:1rem;}
+.mes-block{position:relative;}
+.mes-header{display:flex;align-items:center;gap:10px;padding:0.6rem 0;}
+.mes-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;z-index:1;position:relative;}
+.mes-titulo{font-size:14px;font-weight:700;color:#1A1108;letter-spacing:-0.2px;}
+.mes-sub{font-size:11px;color:#7a6a55;margin-left:auto;}
+.mes-line{position:absolute;left:4.5px;top:0;bottom:0;width:1px;background:#c9b99a;}
+.mes-line.last{bottom:50%;}
+.componentes{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:0 0 1.25rem 22px;}
+.comp-card{background:#faf9f6;border:0.5px solid #c9b99a;border-radius:14px;padding:12px 14px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;user-select:none;}
+.comp-card:hover{border-color:#b0a090;}
+.comp-card.active{border-color:#D97757;box-shadow:0 0 0 1px #D97757;}
+.comp-header{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.comp-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.comp-name{font-size:12px;font-weight:700;color:#1A1108;line-height:1.3;}
+.comp-desc{font-size:11px;color:#7a6a55;line-height:1.5;}
+.comp-badge{display:inline-flex;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;margin-top:5px;}
+.detail-panel{margin:0 0 1rem 22px;background:#faf9f6;border-radius:14px;border:0.5px solid #c9b99a;overflow:hidden;max-height:0;transition:max-height 0.3s ease;}
+.detail-panel.open{max-height:600px;}
+.detail-inner{padding:16px;}
+.detail-title{font-size:15px;font-weight:800;color:#1A1108;margin-bottom:8px;letter-spacing:-0.3px;font-family:'Georgia','Times New Roman',serif;}
+.detail-body{font-size:12px;color:#7a6a55;line-height:1.7;}
+.detail-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.detail-item{background:#faf9f6;border-radius:10px;padding:10px 12px;border:0.5px solid #c9b99a;}
+.detail-item-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin-bottom:3px;}
+.detail-item-val{font-size:12px;color:#1A1108;}
+.close-btn{float:right;font-size:11px;color:#7a6a55;cursor:pointer;margin-top:-2px;padding:2px 6px;border-radius:4px;border:0.5px solid #c9b99a;background:#faf9f6;}
+.nineras-block{margin-top:0.5rem;}
+.nineras-card{background:#faf9f6;border:0.5px solid #c9b99a;border-radius:14px;padding:14px 16px;cursor:pointer;transition:border-color 0.15s;}
+.nineras-card:hover{border-color:#b0a090;}
+.nineras-card.active{border-color:#D97757;}
+.nineras-title{font-size:14px;font-weight:700;color:#1A1108;margin-bottom:4px;letter-spacing:-0.2px;}
+.nineras-desc{font-size:12px;color:#7a6a55;line-height:1.5;margin-bottom:10px;}
+.nineras-sesiones{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sesion{background:#f0ebe2;border-radius:10px;padding:10px 12px;}
+.sesion-num{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
+.sesion-name{font-size:12px;font-weight:700;color:#1A1108;margin-bottom:2px;}
+.sesion-desc{font-size:11px;color:#7a6a55;}
+.trimestral-card{background:#faf9f6;border:1.5px solid #8C6A5D;border-radius:14px;padding:14px 16px;cursor:pointer;transition:box-shadow 0.15s;}
+.trimestral-card:hover{box-shadow:0 0 0 1px #8C6A5D;}
+.trimestral-title{font-size:14px;font-weight:700;color:#8C6A5D;margin-bottom:4px;letter-spacing:-0.2px;}
+.trimestral-desc{font-size:12px;color:#7a6a55;line-height:1.5;margin-bottom:10px;}
+.t-items{display:flex;flex-direction:column;gap:5px;}
+.t-item{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:#7a6a55;}
+.t-dot{width:5px;height:5px;border-radius:50%;background:#8C6A5D;flex-shrink:0;margin-top:5px;}
+.flujo-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#D97757;margin:2rem 0 0.75rem;}
+.flujo{display:flex;align-items:center;flex-wrap:wrap;gap:4px;}
+.flujo-box{background:#f0ebe2;border:0.5px solid #c9b99a;border-radius:10px;padding:6px 10px;font-size:11px;color:#1A1108;font-weight:500;white-space:nowrap;}
+.flujo-arrow{font-size:12px;color:#7a6a55;}
+.footer{margin-top:2rem;padding-top:1.25rem;border-top:0.5px solid #c9b99a;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+.footer-l{font-size:11px;color:#7a6a55;}
+.footer-r{font-size:11px;color:#7a6a55;text-align:right;}
+@media(max-width:640px){
+  .top-bar{flex-direction:column;align-items:flex-start;gap:6px;}
+  .actio{text-align:left;}
+  .componentes{grid-template-columns:1fr;}
+  .nineras-sesiones{grid-template-columns:1fr;}
+  .detail-row{grid-template-columns:1fr;}
+  .vea-title{font-size:18px;}
+  .flujo{gap:3px;}
+  .flujo-box{font-size:10px;padding:5px 8px;}
+}
+@media(max-width:400px){
+  .wrap{padding:1.25rem 0.75rem;}
+  .componentes{padding-left:16px;}
+  .detail-panel{margin-left:16px;}
+}
+</style>
+
+<div class="wrap">
+  <div class="top-bar">
+    <div class="vea-title">Vida en Arte Kids — Sistema de Desarrollo Kínder</div>
+    <div class="actio"><strong>Actio Growth</strong>Entrega de consultoría · 2025</div>
+  </div>
+
+  <div class="ciclo-label">Proceso de admisión — antes del ciclo</div>
+
+  <div id="timeline">
+
+    <!-- PASO 1: INGRESO -->
+    <div class="mes-block">
+      <div class="mes-line"></div>
+      <div class="mes-header">
+        <div class="mes-dot" style="background:#D97757;"></div>
+        <div class="mes-titulo">Ingreso del niño</div>
+        <div class="mes-sub">Antes del ciclo</div>
+      </div>
+      <div class="componentes">
+        <div class="comp-card" onclick="toggle(this,'ev-inicial')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="#D97757" stroke-width="1.2"/><line x1="4" y1="5" x2="10" y2="5" stroke="#D97757" stroke-width="1"/><line x1="4" y1="7.5" x2="10" y2="7.5" stroke="#D97757" stroke-width="1"/><line x1="4" y1="10" x2="7" y2="10" stroke="#D97757" stroke-width="1"/></svg></div>
+            <div class="comp-name">Evaluación inicial</div>
+          </div>
+          <div class="comp-desc">5 dimensiones · 5 ítems cada una · Anclada en Bayley-4 · 3 instrumentos por rango de edad</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#D97757;">Documento</div>
+        </div>
+        <div class="comp-card" onclick="toggle(this,'plan-enfoque')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#F5EBE6;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#A0522D" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="#A0522D" stroke-width="1" stroke-linecap="round"/></svg></div>
+            <div class="comp-name">Plan de Enfoque Personalizado</div>
+          </div>
+          <div class="comp-desc">Generado por IA · 5 secciones · Focos identificados automáticamente · Se muestra en el pitch</div>
+          <div class="comp-badge" style="background:#F5EBE6;color:#A0522D;">IA · Prompt</div>
+        </div>
+      </div>
+      <div class="detail-panel" id="ev-inicial">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('ev-inicial')">cerrar</span>
+          <div class="detail-title">Evaluación inicial</div>
+          <div class="detail-body">Se aplica al ingreso del niño. Mide 5 dimensiones de desarrollo con 5 ítems binarios cada una, anclada científicamente en el instrumento Bayley-4 de Pearson. Genera el punto de partida del sistema — sin evaluación inicial no hay focos, sin focos no hay plan.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Dimensiones</div><div class="detail-item-val">Físico · Lenguaje · Cognitivo · Emocional · Curiosidad</div></div>
+            <div class="detail-item"><div class="detail-item-label">Instrumentos</div><div class="detail-item-val">3 documentos — uno por rango de edad: 2-3, 3-4 y 4-5 años</div></div>
+            <div class="detail-item"><div class="detail-item-label">Quién aplica</div><div class="detail-item-val">Director de Desarrollo asignado al grupo</div></div>
+            <div class="detail-item"><div class="detail-item-label">Output</div><div class="detail-item-val">Percentil por dimensión + identificación automática de 2 focos</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel" id="plan-enfoque">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('plan-enfoque')">cerrar</span>
+          <div class="detail-title">Plan de Enfoque Personalizado</div>
+          <div class="detail-body">Se genera automáticamente con los datos de la evaluación inicial. Tiene dos funciones: se muestra al padre en el pitch como el Paso 4.5 — el momento más poderoso de la reunión — y sirve como guía de trabajo al Director durante todo el ciclo.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Arquitectura</div><div class="detail-item-val">1. Quién es el niño · 2. Lo que verás en casa · 3. Cómo lo logramos · 4. La evidencia · 5. El rol del Director</div></div>
+            <div class="detail-item"><div class="detail-item-label">Base científica</div><div class="detail-item-val">32 sesiones por espacio en 90 días · 128-160 momentos por foco · Harvard Center on Developing Child</div></div>
+            <div class="detail-item"><div class="detail-item-label">Generado por</div><div class="detail-item-val">IA con prompt estructurado · Input: datos de evaluación · Output: JSON de 7 campos</div></div>
+            <div class="detail-item"><div class="detail-item-label">Tono</div><div class="detail-item-val">Oportunidad — nunca déficit. Proyección basada en cálculo, no en narrativa.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 2: SESIÓN DE CIERRE -->
+    <div class="mes-block">
+      <div class="mes-line last"></div>
+      <div class="mes-header">
+        <div class="mes-dot" style="background:#D97757;"></div>
+        <div class="mes-titulo">Sesión de cierre</div>
+        <div class="mes-sub">Antes de ingresar al centro</div>
+      </div>
+      <div class="componentes">
+        <div class="comp-card" onclick="toggle(this,'sesion-cierre')" style="border-color:#A0522D;">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#F5EBE6;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#A0522D" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9.5 5" stroke="#A0522D" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="comp-name">Sesión de cierre</div>
+          </div>
+          <div class="comp-desc">El padre llega con el niño · Se evalúa · Se presenta el plan personalizado · Se cierra la inversión — todo en una sola reunión</div>
+          <div class="comp-badge" style="background:#F5EBE6;color:#A0522D;">Reunión presencial</div>
+        </div>
+      </div>
+      <div class="detail-panel" id="sesion-cierre">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('sesion-cierre')">cerrar</span>
+          <div class="detail-title">Sesión de cierre</div>
+          <div class="detail-body">La evaluación y el cierre ocurren en la misma visita. El niño es evaluado mientras el padre observa — eso establece autoridad antes de que empiece el pitch. El cerrador conduce un guión de 7 pasos: rapport, diagnóstico, amplificación, solución, Plan de Enfoque Personalizado (Paso 4.5 — momento de mayor impacto), prueba, oferta y cierre. El padre no se va sin haber tomado una decisión.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Flujo</div><div class="detail-item-val">Llegada → evaluación del niño → generación del plan → pitch de 7 pasos → presentación del plan → oferta → cierre</div></div>
+            <div class="detail-item"><div class="detail-item-label">Momento clave</div><div class="detail-item-val">Paso 4.5 — "Esto es lo que vimos en [nombre] hoy." · Silencio · El padre lee su propio hijo en el documento</div></div>
+            <div class="detail-item"><div class="detail-item-label">Marco</div><div class="detail-item-val">SPIN Selling · Cialdini (unidad, autoridad) · Kahneman (Sistema 1 antes que Sistema 2)</div></div>
+            <div class="detail-item"><div class="detail-item-label">Objetivo</div><div class="detail-item-val">El padre invierte en el cupo en la misma sesión · Máximo 48 horas para el seguimiento</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end admission timeline -->
+
+  <div class="flujo-label" style="margin-top:2rem;">Ciclo de 90 días — toca cada componente para ver el detalle</div>
+  <div id="timeline-ciclo">
+
+    <!-- MES 1 -->
+    <div class="mes-block">
+      <div class="mes-line"></div>
+      <div class="mes-header">
+        <div class="mes-dot" style="background:#CC6B4A;"></div>
+        <div class="mes-titulo">Mes 1</div>
+        <div class="mes-sub">Días 1–30</div>
+      </div>
+      <div class="componentes">
+        <div class="comp-card" onclick="toggle(this,'reporte-diario')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="2" stroke="#B85C38" stroke-width="1.2"/><line x1="4" y1="6" x2="10" y2="6" stroke="#B85C38" stroke-width="1"/><line x1="4" y1="8.5" x2="7.5" y2="8.5" stroke="#B85C38" stroke-width="1"/></svg></div>
+            <div class="comp-name">Reporte diario</div>
+          </div>
+          <div class="comp-desc">Estructura central + observación de focos · IA genera · Llega al padre</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#B85C38;">IA · Diario</div>
+        </div>
+        <div class="comp-card" onclick="toggle(this,'eval-mensual')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 11L5 7.5L8 9L12 3" stroke="#B85C38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="comp-name">Evaluación mensual</div>
+          </div>
+          <div class="comp-desc">Mismos 5 ítems · Las 5 dimensiones · Actualiza dashboard</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#B85C38;">Dashboard</div>
+        </div>
+        <div class="comp-card" onclick="toggle(this,'mini-reporte')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#B85C38" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9.5 5" stroke="#B85C38" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="comp-name">Mini reporte mensual</div>
+          </div>
+          <div class="comp-desc">IA genera · Acompaña el dashboard · Al padre</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#B85C38;">IA · Mensual</div>
+        </div>
+      </div>
+      <div class="detail-panel" id="reporte-diario">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('reporte-diario')">cerrar</span>
+          <div class="detail-title">Reporte diario</div>
+          <div class="detail-body">El Director registra dos cosas en la app al final de la jornada: la descripción de las actividades del grupo y lo que observó en el niño en relación a sus dos focos. La IA convierte esas notas en el reporte que recibe el padre.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Estructura</div><div class="detail-item-val">Parte 1: actividades del grupo · Parte 2: observación individual orientada a focos</div></div>
+            <div class="detail-item"><div class="detail-item-label">Input del Director</div><div class="detail-item-val">¿Qué viste hoy en [nombre] relacionado con [Foco 1]? · Igual para Foco 2</div></div>
+            <div class="detail-item"><div class="detail-item-label">Output IA</div><div class="detail-item-val">JSON 4 campos: saludo · espacio 1 · espacio 2 · observación individual</div></div>
+            <div class="detail-item"><div class="detail-item-label">Tono</div><div class="detail-item-val">Acompañamiento cercano — como si el Director le hablara directamente al padre</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel" id="eval-mensual">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('eval-mensual')">cerrar</span>
+          <div class="detail-title">Evaluación mensual</div>
+          <div class="detail-body">Se aplica en el mes 1 y el mes 2 de cada ciclo. Usa los mismos ítems de la evaluación inicial para medir el delta — cuánto se movió el percentil en cada dimensión. Actualiza el dashboard automáticamente.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Quién aplica</div><div class="detail-item-val">Director de Desarrollo del niño</div></div>
+            <div class="detail-item"><div class="detail-item-label">Dimensiones</div><div class="detail-item-val">Las 5 completas — no solo los focos</div></div>
+            <div class="detail-item"><div class="detail-item-label">Output</div><div class="detail-item-val">Percentil actualizado por dimensión · Dashboard actualizado · Mini reporte generado</div></div>
+            <div class="detail-item"><div class="detail-item-label">Resultado</div><div class="detail-item-val">Padre ve la evolución en el dashboard sin reunión presencial</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel" id="mini-reporte">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('mini-reporte')">cerrar</span>
+          <div class="detail-title">Mini reporte mensual</div>
+          <div class="detail-body">Acompaña la actualización del dashboard en los meses 1 y 2. La IA toma los percentiles del mes anterior y los actuales y genera una narrativa breve que el padre puede leer en 30 segundos.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Campos</div><div class="detail-item-val">avance · focos · siguiente</div></div>
+            <div class="detail-item"><div class="detail-item-label">Extensión</div><div class="detail-item-val">100 a 130 palabras</div></div>
+            <div class="detail-item"><div class="detail-item-label">Tono</div><div class="detail-item-val">Testigo honesto — celebra el avance, reconoce lo que no avanzó sin dramatismo</div></div>
+            <div class="detail-item"><div class="detail-item-label">Cuándo</div><div class="detail-item-val">Mes 1 y Mes 2 de cada ciclo · El mes 3 tiene reporte trimestral</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MES 2 -->
+    <div class="mes-block">
+      <div class="mes-line"></div>
+      <div class="mes-header">
+        <div class="mes-dot" style="background:#CC6B4A;"></div>
+        <div class="mes-titulo">Mes 2</div>
+        <div class="mes-sub">Días 31–60</div>
+      </div>
+      <div class="componentes">
+        <div class="comp-card" onclick="toggle(this,'reporte-diario-m2')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="2" stroke="#B85C38" stroke-width="1.2"/><line x1="4" y1="6" x2="10" y2="6" stroke="#B85C38" stroke-width="1"/><line x1="4" y1="8.5" x2="7.5" y2="8.5" stroke="#B85C38" stroke-width="1"/></svg></div>
+            <div class="comp-name">Reporte diario</div>
+          </div>
+          <div class="comp-desc">Estructura central + observación de focos · IA genera · Llega al padre</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#B85C38;">IA · Diario</div>
+        </div>
+        <div class="comp-card" onclick="toggle(this,'eval-mensual-m2')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 11L5 7.5L8 9L12 3" stroke="#B85C38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="comp-name">Evaluación mensual</div>
+          </div>
+          <div class="comp-desc">Mismos 5 ítems · Las 5 dimensiones · Actualiza dashboard</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#B85C38;">Dashboard</div>
+        </div>
+        <div class="comp-card" onclick="toggle(this,'mini-reporte-m2')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#B85C38" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9.5 5" stroke="#B85C38" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="comp-name">Mini reporte mensual</div>
+          </div>
+          <div class="comp-desc">IA genera · Acompaña el dashboard · Al padre</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#B85C38;">IA · Mensual</div>
+        </div>
+      </div>
+      <div class="detail-panel" id="reporte-diario-m2">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('reporte-diario-m2')">cerrar</span>
+          <div class="detail-title">Reporte diario — Mes 2</div>
+          <div class="detail-body">El Director registra dos cosas en la app al final de la jornada: la descripción de las actividades del grupo y lo que observó en el niño en relación a sus dos focos. La IA convierte esas notas en el reporte que recibe el padre. Mismo formato que el Mes 1 — la consistencia es parte del sistema.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Estructura</div><div class="detail-item-val">Parte 1: actividades del grupo · Parte 2: observación individual orientada a focos</div></div>
+            <div class="detail-item"><div class="detail-item-label">Input del Director</div><div class="detail-item-val">¿Qué viste hoy en [nombre] relacionado con [Foco 1]? · Igual para Foco 2</div></div>
+            <div class="detail-item"><div class="detail-item-label">Output IA</div><div class="detail-item-val">JSON 4 campos: saludo · espacio 1 · espacio 2 · observación individual</div></div>
+            <div class="detail-item"><div class="detail-item-label">Tono</div><div class="detail-item-val">Acompañamiento cercano — como si el Director le hablara directamente al padre</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel" id="eval-mensual-m2">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('eval-mensual-m2')">cerrar</span>
+          <div class="detail-title">Evaluación mensual — Mes 2</div>
+          <div class="detail-body">Segunda medición del ciclo. Usa los mismos ítems de la evaluación inicial para mostrar el delta acumulado — cuánto se movió el percentil desde el inicio del ciclo hasta ahora. El padre puede ver en el dashboard la evolución de dos puntos de medición antes del cierre trimestral.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Quién aplica</div><div class="detail-item-val">Director de Desarrollo del niño</div></div>
+            <div class="detail-item"><div class="detail-item-label">Dimensiones</div><div class="detail-item-val">Las 5 completas — no solo los focos</div></div>
+            <div class="detail-item"><div class="detail-item-label">Output</div><div class="detail-item-val">Percentil actualizado por dimensión · Dashboard actualizado · Mini reporte generado</div></div>
+            <div class="detail-item"><div class="detail-item-label">Resultado</div><div class="detail-item-val">Padre ve la curva de evolución — inicio, mes 1 y mes 2 — antes del reporte trimestral</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel" id="mini-reporte-m2">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('mini-reporte-m2')">cerrar</span>
+          <div class="detail-title">Mini reporte mensual — Mes 2</div>
+          <div class="detail-body">Segunda narrativa del ciclo. La IA toma los percentiles del Mes 1 y los del Mes 2 y genera una narrativa breve que el padre puede leer en 30 segundos. Es el último mini reporte antes del reporte trimestral completo.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Campos</div><div class="detail-item-val">avance · focos · siguiente</div></div>
+            <div class="detail-item"><div class="detail-item-label">Extensión</div><div class="detail-item-val">100 a 130 palabras</div></div>
+            <div class="detail-item"><div class="detail-item-label">Tono</div><div class="detail-item-val">Testigo honesto — celebra el avance, reconoce lo que no avanzó sin dramatismo</div></div>
+            <div class="detail-item"><div class="detail-item-label">Cuándo</div><div class="detail-item-val">Último reporte narrativo antes del cierre trimestral del ciclo</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MES 3 -->
+    <div class="mes-block">
+      <div class="mes-line last"></div>
+      <div class="mes-header">
+        <div class="mes-dot" style="background:#8C6A5D;"></div>
+        <div class="mes-titulo">Mes 3 — Cierre del ciclo</div>
+        <div class="mes-sub">Días 61–90</div>
+      </div>
+      <div class="componentes" style="padding-bottom:0.75rem;">
+        <div class="comp-card" onclick="toggle(this,'reporte-diario-m3')">
+          <div class="comp-header">
+            <div class="comp-icon" style="background:#FAF0EB;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="2" stroke="#B85C38" stroke-width="1.2"/><line x1="4" y1="6" x2="10" y2="6" stroke="#B85C38" stroke-width="1"/><line x1="4" y1="8.5" x2="7.5" y2="8.5" stroke="#B85C38" stroke-width="1"/></svg></div>
+            <div class="comp-name">Reporte diario</div>
+          </div>
+          <div class="comp-desc">Continúa hasta el último día del ciclo</div>
+          <div class="comp-badge" style="background:#FAF0EB;color:#B85C38;">IA · Diario</div>
+        </div>
+      </div>
+      <div class="detail-panel" id="reporte-diario-m3">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('reporte-diario-m3')">cerrar</span>
+          <div class="detail-title">Reporte diario — Mes 3</div>
+          <div class="detail-body">El reporte diario no se interrumpe. Continúa con la misma estructura hasta el último día del ciclo. En el mes 3 la observación de focos tiene más peso — el Director está cerrando el ciclo y sus observaciones alimentan el reporte trimestral.</div>
+        </div>
+      </div>
+      <div style="padding:0 0 0.75rem 22px;">
+        <div class="trimestral-card" onclick="toggleTrimestral()">
+          <div class="trimestral-title">Evaluación trimestral + Reporte trimestral</div>
+          <div class="trimestral-desc">El momento más importante del ciclo. Muestra el salto completo de 90 días, celebra los logros, define los nuevos focos y genera el nuevo Plan de Enfoque. Se presenta en reunión presencial y llega al dashboard.</div>
+          <div class="t-items">
+            <div class="t-item"><div class="t-dot"></div>Salto de percentil en las 5 dimensiones desde el inicio del ciclo</div>
+            <div class="t-item"><div class="t-dot"></div>Celebración de los focos logrados con evidencia real</div>
+            <div class="t-item"><div class="t-dot"></div>Nuevos focos identificados automáticamente — las 2 dimensiones más bajas</div>
+            <div class="t-item"><div class="t-dot"></div>Nuevo Plan de Enfoque Personalizado generado automáticamente</div>
+            <div class="t-item"><div class="t-dot"></div>El ciclo se reinicia</div>
+          </div>
+        </div>
+        <div class="detail-panel" id="trimestral-detail" style="margin-left:0;margin-top:8px;">
+          <div class="detail-inner">
+            <span class="close-btn" onclick="closePanel('trimestral-detail')">cerrar</span>
+            <div class="detail-title">Reporte trimestral</div>
+            <div class="detail-body">Es el reporte más completo del sistema. Tiene dos versiones del mismo contenido — digital en el dashboard y documento impreso para la reunión presencial. La IA genera 5 campos: el salto del ciclo, los logros de los focos, las fortalezas inesperadas, los nuevos focos y el rol del Director en el siguiente ciclo.</div>
+            <div class="detail-row">
+              <div class="detail-item"><div class="detail-item-label">Campos</div><div class="detail-item-val">salto · focos_logro · fortalezas · nuevos_focos · director</div></div>
+              <div class="detail-item"><div class="detail-item-label">Extensión</div><div class="detail-item-val">250 a 300 palabras</div></div>
+              <div class="detail-item"><div class="detail-item-label">Entrega</div><div class="detail-item-val">Dashboard + documento impreso en reunión presencial trimestral</div></div>
+              <div class="detail-item"><div class="detail-item-label">Ciclo</div><div class="detail-item-val">Al terminar → nuevos focos → nuevo Plan de Enfoque → ciclo reiniciado</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end timeline-ciclo -->
+
+  <!-- NIÑERAS -->
+  <div style="margin-top:1.5rem;">
+    <div class="ciclo-label">En paralelo — todo el ciclo</div>
+    <div class="nineras-block">
+      <div class="nineras-card" onclick="toggleNineras()">
+        <div class="nineras-title">Entrenamiento de niñeras</div>
+        <div class="nineras-desc">Dos sesiones grupales presenciales al mes en VEA. Alinea el hogar con el centro. Cada sesión cierra con un entregable impreso que también queda en la app.</div>
+        <div class="nineras-sesiones">
+          <div class="sesion">
+            <div class="sesion-num" style="color:#D97757;">Sesión 1</div>
+            <div class="sesion-name">Fundamentos</div>
+            <div class="sesion-desc">Rol, apego seguro, rutinas, disciplina positiva · Tarjeta de lineamientos por edad — permanente</div>
+          </div>
+          <div class="sesion">
+            <div class="sesion-num" style="color:#D97757;">Sesión 2</div>
+            <div class="sesion-name">Focos del ciclo</div>
+            <div class="sesion-desc">Las 5 dimensiones activas · Guía de focos por niño · Cambia cada 90 días</div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel" id="nineras-detail" style="margin-left:0;margin-top:8px;">
+        <div class="detail-inner">
+          <span class="close-btn" onclick="closePanel('nineras-detail')">cerrar</span>
+          <div class="detail-title">Entrenamiento de niñeras</div>
+          <div class="detail-body">45 minutos por sesión. La Sesión 1 cubre los fundamentos del rol de la niñera como figura de desarrollo — se repite mensualmente para consolidar. La Sesión 2 cubre las 5 dimensiones del ciclo activo y entrega la guía de focos específica para el niño que cuida cada niñera. Ambas sesiones están documentadas con prompts de IA para generar los entregables automáticamente.</div>
+          <div class="detail-row">
+            <div class="detail-item"><div class="detail-item-label">Entregable S1</div><div class="detail-item-val">Tarjeta de lineamientos generales por edad — vigente todo el ciclo</div></div>
+            <div class="detail-item"><div class="detail-item-label">Entregable S2</div><div class="detail-item-val">Guía de focos del ciclo por niño — cambia cada 90 días · Queda en la app para el padre</div></div>
+            <div class="detail-item"><div class="detail-item-label">Asistentes</div><div class="detail-item-val">Niñeras y padres bienvenidos · Hasta 80 niñeras en el sistema</div></div>
+            <div class="detail-item"><div class="detail-item-label">Base</div><div class="detail-item-val">Teoría del apego · Harlow · Disciplina positiva · Desarrollo por etapas</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLUJO -->
+  <div class="flujo-label">Flujo del sistema</div>
+  <div class="flujo">
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Evaluación inicial</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Plan de Enfoque · Cierre</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Sesión de cierre</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Ingreso al ciclo</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Reporte diario</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Eval. mensual</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Dashboard</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Reporte trimestral</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-box" style="border-color:#D97757;color:#D97757;">Nuevos focos</div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-l">Vida en Arte Kids · Kínder · Panamá</div>
+    <div class="footer-r">Construido por Actio Growth · Fase 1 · 2025</div>
+  </div>
+</div>
+
+<script>
+function toggle(card, panelId) {
+  const panel = document.getElementById(panelId);
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.detail-panel.open').forEach(p => {
+    p.classList.remove('open');
+    p.previousElementSibling && p.previousElementSibling.classList && p.previousElementSibling.classList.remove && p.previousElementSibling.classList.remove('active');
+  });
+  document.querySelectorAll('.comp-card.active, .nineras-card.active, .trimestral-card.active').forEach(c => c.classList.remove('active'));
+  if (!isOpen) {
+    panel.classList.add('open');
+    card.classList.add('active');
+  }
+}
+function closePanel(id) {
+  const panel = document.getElementById(id);
+  panel.classList.remove('open');
+  document.querySelectorAll('.comp-card.active, .nineras-card.active, .trimestral-card.active').forEach(c => c.classList.remove('active'));
+}
+function toggleTrimestral() {
+  const panel = document.getElementById('trimestral-detail');
+  const card = document.querySelector('.trimestral-card');
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.detail-panel.open').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.comp-card.active, .nineras-card.active, .trimestral-card.active').forEach(c => c.classList.remove('active'));
+  if (!isOpen) { panel.classList.add('open'); card.classList.add('active'); }
+}
+function toggleNineras() {
+  const panel = document.getElementById('nineras-detail');
+  const card = document.querySelector('.nineras-card');
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.detail-panel.open').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.comp-card.active, .nineras-card.active, .trimestral-card.active').forEach(c => c.classList.remove('active'));
+  if (!isOpen) { panel.classList.add('open'); card.classList.add('active'); }
+}
+</script>
